@@ -34,9 +34,20 @@ app.post("/contact", async (req, res) => {
       }
     );
 
-    const data = await response.json();
+   const text = await response.text();
 
-    res.json(data);
+console.log("PHP RAW RESPONSE:", text);
+
+try {
+  const data = JSON.parse(text);
+  res.json(data);
+} catch (err) {
+  res.status(500).json({
+    status: "error",
+    message: "Invalid response from PHP",
+    raw: text,
+  });
+}
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
