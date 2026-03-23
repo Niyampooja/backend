@@ -1,15 +1,28 @@
-
 const express = require("express");
 const fetch = require("node-fetch");
 const cors = require("cors");
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+// ✅ CORS FIX (IMPORTANT)
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST"],
+}));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ✅ TEST route
+app.get("/", (req, res) => {
+  res.send("Backend working 🚀");
+});
+
+// ✅ CONTACT API (MAIN)
 app.post("/contact", async (req, res) => {
   try {
+    console.log("Received:", req.body); // debug
+
     const response = await fetch(
       "https://poojachaudhary.infinityfree.me/myapi/api/saveContact.php",
       {
@@ -22,14 +35,17 @@ app.post("/contact", async (req, res) => {
     );
 
     const data = await response.json();
+
     res.json(data);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-app.get("/", (req, res) => {
-  res.send("Backend working 🚀");
-});
+// ❗ IMPORTANT PORT FIX (Render के लिए)
+const PORT = process.env.PORT || 5000;
 
-app.listen(5000, () => console.log("Server running on 5000"));
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
+});
