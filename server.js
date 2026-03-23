@@ -21,18 +21,23 @@ app.get("/", (req, res) => {
 // ✅ CONTACT API (MAIN)
 app.post("/contact", async (req, res) => {
   try {
-    console.log("Received:", req.body); // debug
+    console.log("Incoming data:", req.body);
 
     const response = await fetch(
-      "https://poojachaudhary.infinityfree.me/myapi/api/saveContact.php",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams(req.body),
-      }
+      "https://poojachaudhary.infinityfree.me/myapi/api/saveContact.php"
     );
+
+    console.log("Status:", response.status);
+
+    const text = await response.text();
+    console.log("RAW RESPONSE:", text);
+
+    res.json({ raw: text }); // temporary debug
+  } catch (err) {
+    console.error("ERROR:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
 
    const text = await response.text();
 
