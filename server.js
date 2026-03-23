@@ -23,9 +23,20 @@ app.post("/contact", async (req, res) => {
   try {
     console.log("Incoming data:", req.body);
 
-    const response = await fetch(
-      "https://poojachaudhary.infinityfree.me/myapi/api/saveContact.php"
-    );
+   const response = await fetch(
+  "https://poojachaudhary.infinityfree.me/myapi/api/saveContact.php",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      name: req.body.name,
+      email: req.body.email,
+      message: req.body.message,
+    }),
+  }
+);
 
     console.log("Status:", response.status);
 
